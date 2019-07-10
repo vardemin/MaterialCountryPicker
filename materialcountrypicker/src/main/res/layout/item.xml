@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true">
+
+    <LinearLayout
+        android:id="@+id/flagWrapper"
+        android:layout_width="50dp"
+        android:layout_height="60dp"
+        android:layout_marginLeft="@dimen/dp_5"
+        android:layout_marginRight="@dimen/dp_5"
+        android:gravity="center">
+
+        <ImageView
+            android:id="@+id/ivFlag"
+            android:layout_width="32dp"
+            android:layout_height="21dp"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvName"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@+id/flagWrapper"
+        android:layout_toLeftOf="@+id/tvCode"
+        android:layout_toRightOf="@+id/flagWrapper"
+        android:layout_toStartOf="@+id/tvCode"
+        android:gravity="center_vertical"
+        android:text="India (IN)"
+        android:textColor="@android:color/secondary_text_light"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/tvCode"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:gravity="center_vertical"
+        android:paddingEnd="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingStart="10dp"
+        android:text="@string/sample_code"
+        android:textColor="@android:color/secondary_text_light"
+        android:textSize="16sp" />
+
+    <View
+        android:id="@+id/preferenceDivider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:alpha="0.2"
+        android:background="#898989" />
+</RelativeLayout>

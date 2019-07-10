@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rl_holder"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/rl_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp">
+
+        <TextView
+            android:id="@+id/textView_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_toLeftOf="@+id/ivDismiss"
+            android:layout_toStartOf="@+id/ivDismiss"
+            android:text="@string/select_country"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@android:color/secondary_text_light" />
+
+        <ImageView
+            android:id="@+id/ivDismiss"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:alpha="0.7"
+            android:background="@drawable/ccp_selectable_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="4dp"
+            android:tint="#000000"
+            app:srcCompat="@drawable/ic_clear_black" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_query_holder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rl_title">
+
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/searchView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:queryHint="@string/search_hint"
+            app:actionViewClass="android.support.v7.widget.SearchView" />
+    </RelativeLayout>
+
+    <include
+        layout="@layout/picker_ui"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rl_query_holder" />
+</RelativeLayout>

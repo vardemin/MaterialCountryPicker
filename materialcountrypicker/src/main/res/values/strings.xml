@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">countrypicker</string>
+    <string name="select_country">Select Country</string>
+    <string name="no_result_found">No result found</string>
+    <string name="search_hint">Search for country</string>
+    <string name="sample_code">+91</string>
+    <string name="format_country_with_code">%s ( %s )</string>
+    <string name="format_country">%s</string>
+    <string name="plus_prefix">%s</string>
+    <string name="fmt_code_and_dial_code">(%s) %s</string>
+    <string name="fmt_dial_code">%s</string>
+    <string name="fmt_code">(%s)</string>
+    <string name="search_title">Search a country</string>
+    <string name="ng_234_sample_text">(NG) +234</string>
+</resources>

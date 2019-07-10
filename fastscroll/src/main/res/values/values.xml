@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr format="reference" name="fastscroll__style"/>
+    <declare-styleable name="fastscroll__fastScroller"><attr format="color" name="fastscroll__bubbleColor"/><attr format="color" name="fastscroll__handleColor"/><attr format="reference" name="fastscroll__bubbleTextAppearance"/></declare-styleable>
+    <dimen name="fastscroll__bubble_corner">20dp</dimen>
+    <dimen name="fastscroll__bubble_size">50dp</dimen>
+    <dimen name="fastscroll__handle_clickable_width">24dp</dimen>
+    <dimen name="fastscroll__handle_corner">3dp</dimen>
+    <dimen name="fastscroll__handle_height">30dp</dimen>
+    <dimen name="fastscroll__handle_inset">9dp</dimen>
+    <dimen name="fastscroll__handle_padding">2dp</dimen>
+    <dimen name="fastscroll__handle_width">6dp</dimen>
+    <string name="fastscroll__app_name">RecyclerViewFastScroll</string>
+</resources>

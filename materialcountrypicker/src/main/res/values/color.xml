@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="pressed_bg">#64b7b7b7</color>
+    <color name="header_bg">#a2b7b7b7</color>
+    <color name="tint_bg">#64b7b7b7</color>
+</resources>

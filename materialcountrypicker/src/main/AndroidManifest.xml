@@ -1,0 +1,8 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="com.github.vardemin.materialcountrypicker">
+    <application>
+        <activity
+                android:name=".CountryPickerActivity"
+                android:theme="@style/AppTheme.NoActionBar" />
+    </application>
+</manifest>

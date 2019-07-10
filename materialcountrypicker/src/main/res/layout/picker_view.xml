@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:drawingCacheQuality="high"
+    android:orientation="horizontal"
+    android:paddingBottom="@dimen/dp_8"
+    android:paddingLeft="@dimen/dp_8"
+    android:paddingRight="@dimen/dp_5"
+    android:paddingStart="@dimen/dp_8"
+    android:paddingTop="@dimen/dp_8">
+
+    <ImageView
+        android:id="@+id/ivFlag"
+        android:layout_width="50dp"
+        android:layout_height="30dp"
+        android:layout_gravity="start|center_vertical"
+        android:scaleType="centerCrop"
+       />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/btnPick"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start|center_vertical"
+        android:layout_marginLeft="1dp"
+        android:layout_marginStart="1dp"
+        android:scaleType="matrix"
+        android:tint="@color/tint_bg"
+        app:srcCompat="@drawable/ic_arrow_drop_down" />
+
+    <TextView
+        android:id="@+id/tvShortCode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start|center_vertical"
+        android:layout_marginLeft="1dp"
+        android:layout_marginStart="1dp"
+        android:gravity="center_vertical|start"
+        android:text="@string/ng_234_sample_text"
+        android:textColor="#FF000000"
+        android:textStyle="bold" />
+</LinearLayout>
