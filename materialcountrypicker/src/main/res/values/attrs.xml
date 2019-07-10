@@ -16,6 +16,7 @@
         <attr name="cp_showCountryCodeInList" format="boolean" />
         <attr name="cp_showCountryDialCodeInView" format="boolean" />
         <attr name="cp_showCountryDialCodeInList" format="boolean" />
+        <attr name="cp_showCountryDropdownArrow" format="boolean" />
         <attr name="cp_rememberLastSelection" format="boolean" />
         <attr name="cp_setCountryCodeBorder" format="boolean" />
 

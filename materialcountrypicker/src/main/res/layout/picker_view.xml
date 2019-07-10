@@ -5,6 +5,7 @@
     android:layout_height="wrap_content"
     android:drawingCacheQuality="high"
     android:orientation="horizontal"
+              android:gravity="center_vertical"
     android:paddingBottom="@dimen/dp_8"
     android:paddingLeft="@dimen/dp_8"
     android:paddingRight="@dimen/dp_5"
@@ -15,18 +16,13 @@
         android:id="@+id/ivFlag"
         android:layout_width="50dp"
         android:layout_height="30dp"
-        android:layout_gravity="start|center_vertical"
-        android:scaleType="centerCrop"
-       />
+        android:scaleType="centerCrop"/>
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/btnPick"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="start|center_vertical"
-        android:layout_marginLeft="1dp"
-        android:layout_marginStart="1dp"
-        android:scaleType="matrix"
+        android:adjustViewBounds="true"
         android:tint="@color/tint_bg"
         app:srcCompat="@drawable/ic_arrow_drop_down" />
 
@@ -34,7 +30,6 @@
         android:id="@+id/tvShortCode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="start|center_vertical"
         android:layout_marginLeft="1dp"
         android:layout_marginStart="1dp"
         android:gravity="center_vertical|start"

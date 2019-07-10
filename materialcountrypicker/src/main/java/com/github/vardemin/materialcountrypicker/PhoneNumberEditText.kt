@@ -24,6 +24,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.widget.AppCompatImageView
 import com.google.android.material.textfield.TextInputEditText
 
 /**
@@ -51,6 +52,7 @@ class PhoneNumberEditText : TextInputEditText, CountryPickerDialog.OnCountrySele
     var isShowFullscreenDialog: Boolean = false
     private var showCountryCodeInView: Boolean = false
     private var showCountryDialCodeInView: Boolean = false
+    private var showCountryDropdownArrow: Boolean = false
     private var rememberLastSelection: Boolean = false
     private var setCountryCodeBorder: Boolean = false
     var isShowCountryCodeInList: Boolean = false
@@ -160,6 +162,9 @@ class PhoneNumberEditText : TextInputEditText, CountryPickerDialog.OnCountrySele
                 showCountryDialCodeInView =
                     a.getBoolean(R.styleable.PhoneNumberEditText_cp_showCountryDialCodeInView, true)
 
+                //show dropdown arrow icon near flag
+                showCountryDropdownArrow = a.getBoolean(R.styleable.PhoneNumberEditText_cp_showCountryDropdownArrow, false)
+
                 //default Country : null/empty by default
                 defaultCountryName = a.getString(R.styleable.PhoneNumberEditText_cp_defaultCountryName)
 
@@ -239,6 +244,7 @@ class PhoneNumberEditText : TextInputEditText, CountryPickerDialog.OnCountrySele
      * @param resetDefault used to reset to the default country when loading the detected country fail
      */
     private fun startAutoCountryDetection(resetDefault: Boolean) {
+
         try {
             var successfullyDetected = false
             for (i in 0 until selectedAutoDetectionPref!!.representation.length) {
@@ -323,6 +329,8 @@ class PhoneNumberEditText : TextInputEditText, CountryPickerDialog.OnCountrySele
         val wrapper = LayoutInflater.from(getContext()).inflate(R.layout.picker_view, null)
 
         val tvCode = wrapper.findViewById<TextView>(R.id.tvShortCode)
+        wrapper.findViewById<AppCompatImageView>(R.id.btnPick).visibility =
+            if (showCountryDropdownArrow) View.VISIBLE else View.INVISIBLE
         tvCode.typeface = getTypeface()
         tvCode.textSize = getTextSize()
         tvCode.setTextColor(getTextColors())
@@ -481,8 +489,8 @@ class PhoneNumberEditText : TextInputEditText, CountryPickerDialog.OnCountrySele
      */
     fun detectLocaleCountry(resetDefault: Boolean): Boolean {
         try {
-            val localeCountryISO = getContext().getResources().getConfiguration().locale.getCountry()
-            if (localeCountryISO == null || localeCountryISO!!.isEmpty()) {
+            val localeCountryISO = context.resources.configuration.locale.country
+            if (localeCountryISO == null || localeCountryISO.isEmpty()) {
                 if (resetDefault) {
                     resetToDefaultCountry()
                 }
@@ -503,7 +511,7 @@ class PhoneNumberEditText : TextInputEditText, CountryPickerDialog.OnCountrySele
     private fun getCountryForName(languageToApply: Language?, countryCode: String?): Country {
         val countries = loadDataFromJson(context)
         for (country in countries) {
-            if (countryCode == country.code)
+            if (countryCode?.toUpperCase() == country.code)
                 return country
         }
         return Country("Nigeria", "+234", "NG")
