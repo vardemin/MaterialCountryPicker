@@ -106,7 +106,7 @@ class PhoneNumberEditText : TextInputEditText, CountryPickerDialog.OnCountrySele
             return config.layoutDirection == View.LAYOUT_DIRECTION_RTL
         }
 
-    val fullNumber: String
+    val rawNumber: String
         get() {
             val phoneNumber: String
             val text = text.toString()
@@ -115,17 +115,30 @@ class PhoneNumberEditText : TextInputEditText, CountryPickerDialog.OnCountrySele
             } else {
                 text
             }
+            return this.selectedCountry.dialCode + phoneNumber
+        }
 
-            return this.selectedCountryDialCode + phoneNumber
+    val fullNumber: String
+        get() {
+            val phoneNumber: String
+            val text = text.toString()
+            return if (text.isNotBlank()) {
+                phoneNumber = if (text.startsWith("0")) {
+                    text.replaceFirst("0".toRegex(), "")
+                } else {
+                    text
+                }
+                return this.selectedCountryDialCode + phoneNumber
+            } else text
         }
 
     val formattedFullNumber: String?
         get() {
             val formattedFullNumber: String
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                formattedFullNumber = PhoneNumberUtils.formatNumber(fullNumber, selectedCountryCode)
+                formattedFullNumber = PhoneNumberUtils.formatNumber(rawNumber, selectedCountryCode)
             } else {
-                formattedFullNumber = PhoneNumberUtils.formatNumber(fullNumber)
+                formattedFullNumber = PhoneNumberUtils.formatNumber(rawNumber)
             }
 
             return formattedFullNumber
