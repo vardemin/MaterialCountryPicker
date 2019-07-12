@@ -7,6 +7,10 @@ import android.os.Bundle
 import androidx.annotation.ColorRes
 import androidx.annotation.StyleRes
 
+/**
+ * @author Vladimir Akopzhanian on 10/07/19.
+ */
+
 object CountryPicker {
 
     val PICKER_REQUEST_CODE = 101

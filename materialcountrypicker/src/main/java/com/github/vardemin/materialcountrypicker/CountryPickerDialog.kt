@@ -13,9 +13,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.github.vardemin.fastscroll.FastScroller
 
 /**
- * @author Jerry Hanks on 12/14/17.
+ * @author Vladimir Akopzhanian on 10/07/19.
  */
-
 object CountryPickerDialog {
     private val INSTANCE: Dialog? = null
 

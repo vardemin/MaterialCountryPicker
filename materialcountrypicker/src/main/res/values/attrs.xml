@@ -4,6 +4,9 @@
         <attr name="cp_defaultCountryName" format="string" />
         <attr name="cp_preferredCountries" format="string" />
 
+        <attr name="cp_convertPlusTo" format="string"/>
+        <attr name="cp_appendCodeText" format="boolean" />
+
         <!--bool-->
         <!--Auto detection takes preference True by default-->
         <attr name="cp_autoDetectCountry" format="boolean" />

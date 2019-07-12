@@ -4,6 +4,9 @@ import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 
+/**
+ * @author Vladimir Akopzhanian on 10/07/19.
+ */
 
 @Parcelize
 data class Country(

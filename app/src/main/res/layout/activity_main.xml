@@ -6,25 +6,12 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <com.github.vardemin.materialcountrypicker.PhoneNumberEditText
-            android:id="@+id/countryPicker"
+    <fragment
+            android:id="@+id/navHostFragment"
+            android:name="androidx.navigation.fragment.NavHostFragment"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="58dp"
-            android:hint="08030720816"
-            app:cp_autoDetectCountry="true"
-            app:cp_fastScrollerBubbleColor="@color/colorPrimary"
-            app:cp_fastScrollerBubbleTextAppearance="@style/TextAppearance.AppCompat.Medium"
-            app:cp_fastScrollerHandleColor="@color/colorAccent"
-            app:cp_preferredCountries="ng,dz,au"
-            app:cp_rememberLastSelection="true"
-            app:cp_setCountryCodeBorder="true"
-            app:cp_showCountryCodeInView="true"
-            app:cp_showCountryDialCodeInView="true"
-            app:cp_showFastScroll="true"
-            app:cp_showFullScreeDialog="false"
-            />
+            android:layout_height="match_parent"
+            app:defaultNavHost="true"
+            app:navGraph="@navigation/country_picker_navigation" />
 
 </LinearLayout>

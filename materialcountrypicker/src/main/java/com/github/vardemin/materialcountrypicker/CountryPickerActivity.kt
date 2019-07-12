@@ -16,6 +16,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.vardemin.fastscroll.FastScroller
 
+/**
+ * @author Vladimir Akopzhanian on 10/07/19.
+ */
+
 class CountryPickerActivity: AppCompatActivity() {
     private var showFastScroller = true
     private var fastScrollerBubbleColor = 0

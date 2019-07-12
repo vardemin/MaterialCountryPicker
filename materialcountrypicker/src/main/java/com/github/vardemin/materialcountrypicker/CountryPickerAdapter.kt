@@ -11,6 +11,10 @@ import com.github.vardemin.sectionedrecycleradapter.SectionViewHolder
 import com.github.vardemin.sectionedrecycleradapter.SectionedRecyclerViewAdapter
 import java.util.ArrayList
 
+/**
+ * @author Vladimir Akopzhanian on 10/07/19.
+ */
+
 class CountryPickerAdapter(val context: Context,
                            val clickListener: OnItemClickCallback,
                            val countries: List<Country>,

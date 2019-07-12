@@ -15,7 +15,9 @@ import android.os.Parcel
 import android.os.Parcelable
 import android.telephony.PhoneNumberUtils
 import android.telephony.TelephonyManager
+import android.text.Editable
 import android.text.InputType
+import android.text.SpannableStringBuilder
 import android.text.TextUtils
 import android.util.AttributeSet
 import android.util.Log
@@ -28,7 +30,7 @@ import androidx.appcompat.widget.AppCompatImageView
 import com.google.android.material.textfield.TextInputEditText
 
 /**
- * @author Jerry Hanks on 12/14/17.
+ * @author Vladimir Akopzhanian on 10/07/19.
  */
 
 class PhoneNumberEditText : TextInputEditText, CountryPickerDialog.OnCountrySelectedCallback {
@@ -57,18 +59,42 @@ class PhoneNumberEditText : TextInputEditText, CountryPickerDialog.OnCountrySele
     private var setCountryCodeBorder: Boolean = false
     var isShowCountryCodeInList: Boolean = false
 
+
     private var languageToApply: Language? = Language.ENGLISH
     private var selectedAutoDetectionPref: AutoDetectionPref? = null
-    private var selectedCountry: Country? = Country("Nigeria", "+234", "NG")
+    private var selectedCountry: Country = defaultCountry
     private var chip: BitmapDrawable? = null
+
+    /**
+     * Used for +{code} string replacement
+     * null if disabled
+     */
+    var plusConverterString: String? = null
+    /**
+     * Append country code to editable
+     * Useful in databinding
+     */
+    var appendCountryCode: Boolean = true
 
     /**
      * Return the selected Country name
      *
      * @return `String` name of the selected country
      */
-    private val selectedCountryName: String?
-        get() = this.selectedCountry!!.name
+    val selectedCountryName: String?
+        get() = this.selectedCountry.name
+
+    /**
+     * Return the selected Country code
+     *
+     * @return `String` code of the selected country
+     */
+    val selectedCountryDialCode: String?
+        get() {
+            return if (plusConverterString == null) {
+                this.selectedCountry.dialCode ?: defaultCountry.dialCode
+            } else this.selectedCountry.dialCode?.replace("+", plusConverterString!!)
+        }
 
     /**
      * Checks if RTL is enabled in the device
@@ -81,40 +107,37 @@ class PhoneNumberEditText : TextInputEditText, CountryPickerDialog.OnCountrySele
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
                 return false
             }
-            val config = getResources().getConfiguration()
-            return config.getLayoutDirection() == View.LAYOUT_DIRECTION_RTL
+            val config = resources.configuration
+            return config.layoutDirection == View.LAYOUT_DIRECTION_RTL
         }
 
     val fullNumber: String
-        get() = fullNumberWithPlus.replace("+", " ")
-
-    val fullNumberWithPlus: String
         get() {
             val phoneNumber: String
-            val text = getText().toString()
-            if (text.startsWith("0")) {
-                phoneNumber = text.replaceFirst("0".toRegex(), "")
+            val text = text.toString()
+            phoneNumber = if (text.startsWith("0")) {
+                text.replaceFirst("0".toRegex(), "")
             } else {
-                phoneNumber = text
+                text
             }
 
-            return this.selectedCountry!!.dialCode!! + phoneNumber
+            return this.selectedCountryDialCode + phoneNumber
         }
 
     val formattedFullNumber: String?
         get() {
             val formattedFullNumber: String
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                formattedFullNumber = PhoneNumberUtils.formatNumber(fullNumberWithPlus, selectedCountryCode)
+                formattedFullNumber = PhoneNumberUtils.formatNumber(fullNumber, selectedCountryCode)
             } else {
-                formattedFullNumber = PhoneNumberUtils.formatNumber(fullNumberWithPlus)
+                formattedFullNumber = PhoneNumberUtils.formatNumber(fullNumber)
             }
 
             return formattedFullNumber
         }
 
     private val selectedCountryCode: String?
-        get() = if (this.selectedCountry == null) "" else this.selectedCountry!!.code
+        get() = this.selectedCountry.code
 
     var isShowCountryCodeInView: Boolean
         get() = showCountryCodeInView
@@ -146,11 +169,31 @@ class PhoneNumberEditText : TextInputEditText, CountryPickerDialog.OnCountrySele
         init(attrs, defStyleAttr)
     }
 
+/*    override fun setText(text: CharSequence?, type: BufferType?) {
+        super.setText(
+            if(text?.isNotBlank() == true)
+                text.replace(Regex(selectedCountryDialCode ?: ""), "")
+            else text, type)
+    }
+
+    override fun getText(): Editable? {
+        return if (appendCountryCode) {
+            val s = super.getText()
+            SpannableStringBuilder(s.toString().prependIndent(selectedCountryDialCode ?: "+1"))
+        } else super.getEditableText()
+    }*/
+
+
     private fun init(attrs: AttributeSet?, defStyleAttr: Int) {
         if (attrs != null) {
             val a =
-                getContext().getTheme().obtainStyledAttributes(attrs, R.styleable.PhoneNumberEditText, defStyleAttr, 0)
+                context.theme.obtainStyledAttributes(attrs, R.styleable.PhoneNumberEditText, defStyleAttr, 0)
             try {
+                //replace plus sign by this
+                plusConverterString = a.getString(R.styleable.PhoneNumberEditText_cp_convertPlusTo)
+
+                //append dial code to text
+                appendCountryCode = a.getBoolean(R.styleable.PhoneNumberEditText_cp_appendCodeText, true)
 
                 //show country code in view: false by default
                 showCountryCodeInView = a.getBoolean(R.styleable.PhoneNumberEditText_cp_showCountryCodeInView, true)
@@ -163,7 +206,8 @@ class PhoneNumberEditText : TextInputEditText, CountryPickerDialog.OnCountrySele
                     a.getBoolean(R.styleable.PhoneNumberEditText_cp_showCountryDialCodeInView, true)
 
                 //show dropdown arrow icon near flag
-                showCountryDropdownArrow = a.getBoolean(R.styleable.PhoneNumberEditText_cp_showCountryDropdownArrow, false)
+                showCountryDropdownArrow =
+                    a.getBoolean(R.styleable.PhoneNumberEditText_cp_showCountryDropdownArrow, false)
 
                 //default Country : null/empty by default
                 defaultCountryName = a.getString(R.styleable.PhoneNumberEditText_cp_defaultCountryName)
@@ -225,7 +269,7 @@ class PhoneNumberEditText : TextInputEditText, CountryPickerDialog.OnCountrySele
         }
 
         //implement auto Country detection if it is set
-        if (isAutoDetectCountryEnabled && !isInEditMode()) {
+        if (isAutoDetectCountryEnabled && !isInEditMode) {
             startAutoCountryDetection(true)
         }
 
@@ -331,20 +375,20 @@ class PhoneNumberEditText : TextInputEditText, CountryPickerDialog.OnCountrySele
         val tvCode = wrapper.findViewById<TextView>(R.id.tvShortCode)
         wrapper.findViewById<AppCompatImageView>(R.id.btnPick).visibility =
             if (showCountryDropdownArrow) View.VISIBLE else View.INVISIBLE
-        tvCode.typeface = getTypeface()
-        tvCode.textSize = getTextSize()
-        tvCode.setTextColor(getTextColors())
+        tvCode.typeface = typeface
+        tvCode.textSize = textSize
+        tvCode.setTextColor(textColors)
 
         if (isShowCountryCodeInView) {
-            tvCode.setText(getContext().getString(R.string.fmt_code, code))
+            tvCode.text = context.getString(R.string.fmt_code, code)
         }
 
         if (isShowCountryDialCodeInView) {
-            tvCode.setText(getContext().getString(R.string.fmt_dial_code, dialCode))
+            tvCode.text = context.getString(R.string.fmt_dial_code, dialCode)
         }
 
         if (isShowCountryDialCodeInView && isShowCountryCodeInView) {
-            tvCode.setText(getContext().getString(R.string.fmt_code_and_dial_code, code, dialCode))
+            tvCode.text = context.getString(R.string.fmt_code_and_dial_code, code, dialCode)
         }
 
         if (!isShowCountryCodeInView && !isShowCountryDialCodeInView) {
@@ -357,8 +401,8 @@ class PhoneNumberEditText : TextInputEditText, CountryPickerDialog.OnCountrySele
 
 
         wrapper.measure(
-            View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
-            View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+            MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED),
+            MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
         )
         wrapper.layout(0, 0, wrapper.measuredWidth, wrapper.measuredHeight)
 
@@ -381,9 +425,9 @@ class PhoneNumberEditText : TextInputEditText, CountryPickerDialog.OnCountrySele
         val bounds = chip!!.bounds
         val x = event.x.toInt()
         val iconXRect = if (isRTL)
-            getRight() - bounds.width() - EXTRA_PADDING
+            right - bounds.width() - EXTRA_PADDING
         else
-            getLeft() + bounds.width() + EXTRA_PADDING
+            left + bounds.width() + EXTRA_PADDING
 
         when (event.action) {
             MotionEvent.ACTION_UP -> {
@@ -431,7 +475,7 @@ class PhoneNumberEditText : TextInputEditText, CountryPickerDialog.OnCountrySele
      */
     fun detectSIMCountry(resetDefault: Boolean): Boolean {
         try {
-            val telephonyManager = getContext().getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+            val telephonyManager = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
             val simCountryISO = telephonyManager.simCountryIso
             if (simCountryISO == null || simCountryISO.isEmpty()) {
                 if (resetDefault) {
@@ -460,7 +504,7 @@ class PhoneNumberEditText : TextInputEditText, CountryPickerDialog.OnCountrySele
      */
     fun detectNetworkCountry(resetDefault: Boolean): Boolean {
         try {
-            val telephonyManager = getContext().getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+            val telephonyManager = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
             val networkCountryISO = telephonyManager.networkCountryIso
             if (networkCountryISO == null || networkCountryISO.isEmpty()) {
                 if (resetDefault) {
@@ -514,8 +558,16 @@ class PhoneNumberEditText : TextInputEditText, CountryPickerDialog.OnCountrySele
             if (countryCode?.toUpperCase() == country.code)
                 return country
         }
-        return Country("Nigeria", "+234", "NG")
+        return defaultCountry
+    }
 
+    private fun getCountryForDialCode(dialCode: String?): Country {
+        val countries = loadDataFromJson(context)
+        for (country in countries) {
+            if (dialCode == country.dialCode)
+                return country
+        }
+        return defaultCountry
     }
 
     /**
@@ -530,14 +582,14 @@ class PhoneNumberEditText : TextInputEditText, CountryPickerDialog.OnCountrySele
 
     fun setSelectedCountry(selectedCountry: Country) {
         this.selectedCountry = selectedCountry
-        saveLastSelectedCountryCode(this.selectedCountry!!.code)
+        saveLastSelectedCountryCode(this.selectedCountry.code)
         updateSelectedCountry(selectedCountry)
     }
 
     fun startCountrySelection() {
         if (isShowFullscreenDialog) {
             try {
-                val intent = Intent(getContext(), CountryPickerActivity::class.java)
+                val intent = Intent(context, CountryPickerActivity::class.java)
                 val bundle = Bundle()
                 bundle.putBoolean(CountryPicker.EXTRA_SHOW_FAST_SCROLL, isShowFastScroller)
                 bundle.putInt(CountryPicker.EXTRA_SHOW_FAST_SCROLL_BUBBLE_COLOR, fastScrollerBubbleColor)
@@ -581,7 +633,7 @@ class PhoneNumberEditText : TextInputEditText, CountryPickerDialog.OnCountrySele
      */
     private fun saveLastSelectedCountryCode(countryCode: String?) {
         //get instance of the shared pref
-        val preferences = getContext().getSharedPreferences(CP_PREF_FILE, Context.MODE_PRIVATE)
+        val preferences = context.getSharedPreferences(CP_PREF_FILE, Context.MODE_PRIVATE)
 
         //get the Editor
         val editor = preferences.edit()
@@ -596,10 +648,10 @@ class PhoneNumberEditText : TextInputEditText, CountryPickerDialog.OnCountrySele
 
     private fun loadLastSelectedCountryCode() {
         //get instance of the shared pref
-        val preferences = getContext().getSharedPreferences(CP_PREF_FILE, Context.MODE_PRIVATE)
+        val preferences = context.getSharedPreferences(CP_PREF_FILE, Context.MODE_PRIVATE)
 
         //get the last selected country code
-        val lastSelectedCode = preferences.getString(LAST_SELECTION_TAG, "ng")
+        val lastSelectedCode = preferences.getString(LAST_SELECTION_TAG, defaultCountry.code)
 
         //set the country
         setSelectedCountry(getCountryForName(languageToApply, lastSelectedCode))
@@ -621,7 +673,7 @@ class PhoneNumberEditText : TextInputEditText, CountryPickerDialog.OnCountrySele
     }
 
     //convenient class to save and restore the view state
-    protected class SavedState : View.BaseSavedState {
+    protected class SavedState : BaseSavedState {
 
         var countryCode: String? = null
 
@@ -657,14 +709,14 @@ class PhoneNumberEditText : TextInputEditText, CountryPickerDialog.OnCountrySele
     /**
      * Lis of all the supported languages
      */
-    enum class Language private constructor(var code: String) {
+    enum class Language(var code: String) {
         ENGLISH("en")
     }
 
     /**
      * All the supported network detection steps
      */
-    enum class AutoDetectionPref private constructor(//local then network then sim
+    enum class AutoDetectionPref(//local then network then sim
 
         internal var representation: String
     ) {
@@ -703,5 +755,14 @@ class PhoneNumberEditText : TextInputEditText, CountryPickerDialog.OnCountrySele
         private val TAG = PhoneNumberEditText::class.java.simpleName
         private val CP_PREF_FILE = "cp_pref_file"
         private val LAST_SELECTION_TAG = "last_selection_tag"
+        private val defaultCountry = Country("United States", "+1", "US")
+
+        fun fromTextNumber(phoneNumberEditText: PhoneNumberEditText, value: String): String {
+            return value.removePrefix(phoneNumberEditText.selectedCountryDialCode ?: "+1")
+        }
+
+        fun toTextNumber(phoneNumberEditText: PhoneNumberEditText): String {
+            return phoneNumberEditText.fullNumber
+        }
     }
 }
