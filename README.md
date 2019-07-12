@@ -2,7 +2,7 @@
 Country (ISO/phone code) picker library based on EditText (TextInputEditText). [Fresh port to kotlin androidx of https://github.com/jerryOkafor/CountryPicker]
 Why edittext? - Ready implementation for material input field. Just wrap this widget with TextInputLayout.
 
-[![](https://jitpack.io/v/po10cio/TimeLineView.svg)](https://jitpack.io/#vardemin/MaterialCountryPicker)
+[![](https://jitpack.io/v/vardemin/MaterialCountryPicker.svg)](https://jitpack.io/#vardemin/MaterialCountryPicker)
 
 ## Showcase
 
@@ -30,7 +30,7 @@ Then add the following line
 
 ``` gradle
 dependencies {
-  implementation 'com.github.vardemin.MaterialCountryPicker:materialcountrypicker:0.1.2'
+  implementation 'com.github.vardemin.MaterialCountryPicker:materialcountrypicker:0.2.1'
 }
 ```
 
