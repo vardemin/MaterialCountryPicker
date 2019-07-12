@@ -36,7 +36,6 @@
                     android:layout_height="wrap_content"
                     android:maxLength="20"
                     app:cp_autoDetectCountry="true"
-                    app:cp_appendCodeText="true"
                     app:cp_convertPlusTo="00"
                     app:cp_fastScrollerBubbleColor="@color/colorPrimary"
                     app:cp_fastScrollerBubbleTextAppearance="@style/TextAppearance.AppCompat.Medium.Inverse"

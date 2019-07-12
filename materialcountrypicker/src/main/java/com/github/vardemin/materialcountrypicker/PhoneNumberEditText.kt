@@ -70,11 +70,6 @@ class PhoneNumberEditText : TextInputEditText, CountryPickerDialog.OnCountrySele
      * null if disabled
      */
     var plusConverterString: String? = null
-    /**
-     * Append country code to editable
-     * Useful in databinding
-     */
-    var appendCountryCode: Boolean = true
 
     /**
      * Return the selected Country name
@@ -191,9 +186,6 @@ class PhoneNumberEditText : TextInputEditText, CountryPickerDialog.OnCountrySele
             try {
                 //replace plus sign by this
                 plusConverterString = a.getString(R.styleable.PhoneNumberEditText_cp_convertPlusTo)
-
-                //append dial code to text
-                appendCountryCode = a.getBoolean(R.styleable.PhoneNumberEditText_cp_appendCodeText, true)
 
                 //show country code in view: false by default
                 showCountryCodeInView = a.getBoolean(R.styleable.PhoneNumberEditText_cp_showCountryCodeInView, true)

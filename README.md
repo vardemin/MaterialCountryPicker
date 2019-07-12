@@ -7,8 +7,8 @@ Why edittext? - Ready implementation for material input field. Just wrap this wi
 ## Showcase
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<img src="screenshots/Inkedphoto_2019-07-10_19-29-04_LI.jpg" alt="" width="240">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<img src="screenshots/photo_2019-07-10_19-29-06.jpg" alt="" width="240">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<img src="screenshots/screen1.jpg" alt="" width="240">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<img src="screenshots/screen2.jpg" alt="" width="240">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 ## Quick Setup
 ### 1. Include library
@@ -59,6 +59,52 @@ In your XML layout include the TimelineView as follows:
         app:cp_showFullScreeDialog="true" />
       
 ```
+
+## Data Binding
+### 1. Define converter methods
+```kotlin
+object PhoneEditConverter {
+    @InverseMethod("toNumber") //in case of two-way binding
+    @JvmStatic
+    fun toString( //read number
+        view: PhoneNumberEditText,
+        value: String? //input number
+    ): String? {
+        return PhoneNumberEditText.fromTextNumber(view, value ?: "")
+    }
+
+    @JvmStatic
+    fun toNumber( //write number
+        view: PhoneNumberEditText,
+        value: String? //can be ignored
+    ): String? {
+        return PhoneNumberEditText.toTextNumber(view)
+    }
+}
+```
+### 2. Layout binding
+Import type
+```xml
+    <data>
+        <import type="com.github.vardemin.countrypicker.PhoneEditConverter"/>
+    </data>
+```
+Link converter method
+```xml
+<com.github.vardemin.materialcountrypicker.PhoneNumberEditText
+        android:id="@+id/editPhone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxLength="20"
+        app:cp_autoDetectCountry="true"
+        app:cp_fastScrollerBubbleColor="@color/colorPrimary"
+        app:cp_fastScrollerBubbleTextAppearance="@style/TextAppearance.AppCompat.Medium.Inverse"
+        app:cp_fastScrollerHandleColor="@color/colorAccent"
+        app:cp_rememberLastSelection="true"
+        app:cp_showCountryCodeInView="false"
+        android:text='@={PhoneEditConverter.toString(editPhone, mainViewModel.paramsMap["phone"])}'/>
+```
+
 ## XML Attributes
 
 List of xml attribues that are available in PhoneNumberEdittext
@@ -67,6 +113,7 @@ List of xml attribues that are available in PhoneNumberEdittext
 | ------------- |:---------------:|:---------:| 
 | cp_autoDetectCountry      | Enables auto detection of the country the device is currently being used | true|
 |cp_searchAllowed|Enables search functionality in the CountryPicker.|true
+|cp_convertPlusTo|String replacing "+" character. null - disabled.|null
 |cp_showFastScroll|Determines whether the Fastscroller button is show or not.|true
 |cp_dialogKeyboardAutoPopup|Use this to toggle Kwyboard auto popup for  CountryPicker in dialog mode. |true
 |cp_showFullScreeDialog|Use this to switch between Dialog and full screen Pickers| false
