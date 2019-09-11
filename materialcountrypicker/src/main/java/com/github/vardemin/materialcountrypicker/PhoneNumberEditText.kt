@@ -19,6 +19,7 @@ import android.text.Editable
 import android.text.InputType
 import android.text.SpannableStringBuilder
 import android.text.TextUtils
+import android.text.method.DigitsKeyListener
 import android.util.AttributeSet
 import android.util.Log
 import android.view.LayoutInflater
@@ -27,6 +28,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatImageView
+import androidx.core.content.ContextCompat
 import com.google.android.material.textfield.TextInputEditText
 
 /**
@@ -41,6 +43,10 @@ class PhoneNumberEditText : TextInputEditText, CountryPickerDialog.OnCountrySele
     var fastScrollerBubbleColor: Int = 0
         private set
     var fastScrollerHandleColor: Int = 0
+        private set
+    var listItemTextColor: Int = 0
+        private set
+    var fullScreenToolbarColor: Int = 0
         private set
     var fastScrollerBubbleTextAppearance: Int = 0
         private set
@@ -57,6 +63,7 @@ class PhoneNumberEditText : TextInputEditText, CountryPickerDialog.OnCountrySele
     private var showCountryDropdownArrow: Boolean = false
     private var rememberLastSelection: Boolean = false
     private var setCountryCodeBorder: Boolean = false
+    private var allowedSymbols: String = "0123456789"
     var isShowCountryCodeInList: Boolean = false
 
 
@@ -168,6 +175,8 @@ class PhoneNumberEditText : TextInputEditText, CountryPickerDialog.OnCountrySele
             updateSelectedCountry(this.selectedCountry)
         }
 
+    private var onStartActivityCallback: OnStartActivityCallback? = null
+
     @JvmOverloads
     constructor(context: Context, attrs: AttributeSet? = null) : super(context, attrs) {
         init(attrs, 0)
@@ -214,6 +223,9 @@ class PhoneNumberEditText : TextInputEditText, CountryPickerDialog.OnCountrySele
                 showCountryDropdownArrow =
                     a.getBoolean(R.styleable.PhoneNumberEditText_cp_showCountryDropdownArrow, false)
 
+                //allowed symbols
+                allowedSymbols += (a.getString(R.styleable.PhoneNumberEditText_cp_showCountryDropdownArrow) ?: "-")
+
                 //default Country : null/empty by default
                 defaultCountryName = a.getString(R.styleable.PhoneNumberEditText_cp_defaultCountryName)
 
@@ -233,6 +245,16 @@ class PhoneNumberEditText : TextInputEditText, CountryPickerDialog.OnCountrySele
 
                 //scroller handle color
                 fastScrollerHandleColor = a.getColor(R.styleable.PhoneNumberEditText_cp_fastScrollerHandleColor, 0)
+
+                listItemTextColor = a.getColor(
+                    R.styleable.PhoneNumberEditText_cp_listItemTextColor,
+                    ContextCompat.getColor(context, R.color.cp_item_text_color)
+                )
+
+                fullScreenToolbarColor = a.getColor(
+                    R.styleable.PhoneNumberEditText_cp_fullScreenToolbarColor,
+                    ContextCompat.getColor(context, R.color.colorPrimary)
+                )
 
                 //scroller text appearance
                 fastScrollerBubbleTextAppearance =
@@ -266,7 +288,8 @@ class PhoneNumberEditText : TextInputEditText, CountryPickerDialog.OnCountrySele
         }
 
         isRTL = isRTLLanguage
-        setInputType(InputType.TYPE_CLASS_NUMBER)
+        inputType = InputType.TYPE_CLASS_NUMBER
+        keyListener = DigitsKeyListener.getInstance(allowedSymbols)
 
         //load the default country if it was set by the user
         if (!TextUtils.isEmpty(defaultCountryName)) {
@@ -593,33 +616,46 @@ class PhoneNumberEditText : TextInputEditText, CountryPickerDialog.OnCountrySele
 
     fun startCountrySelection() {
         if (isShowFullscreenDialog) {
-            try {
-                val intent = Intent(context, CountryPickerActivity::class.java)
-                val bundle = Bundle()
-                bundle.putBoolean(CountryPicker.EXTRA_SHOW_FAST_SCROLL, isShowFastScroller)
-                bundle.putInt(CountryPicker.EXTRA_SHOW_FAST_SCROLL_BUBBLE_COLOR, fastScrollerBubbleColor)
-                bundle.putInt(CountryPicker.EXTRA_SHOW_FAST_SCROLL_HANDLER_COLOR, fastScrollerHandleColor)
-                bundle.putInt(
-                    CountryPicker.EXTRA_SHOW_FAST_SCROLL_BUBBLE_TEXT_APPEARANCE,
-                    fastScrollerBubbleTextAppearance
-                )
-                bundle.putBoolean(CountryPicker.EXTRA_SHOW_COUNTRY_CODE_IN_LIST, isShowCountryCodeInList)
-                intent.putExtras(bundle)
-                (context as Activity).startActivityForResult(intent, CountryPicker.PICKER_REQUEST_CODE)
-            } catch (e: ClassCastException) {
-                e.printStackTrace()
-                CountryPickerDialog.openPickerDialog(
-                    context, this, isShowCountryCodeInList,
-                    isSearchAllowed, isDialogKeyboardAutoPopup, isShowFastScroller,
-                    fastScrollerBubbleColor, fastScrollerHandleColor, fastScrollerBubbleTextAppearance
-                )
+            val intent = Intent(context, CountryPickerActivity::class.java)
+            val bundle = Bundle()
+            bundle.putBoolean(CountryPicker.EXTRA_SHOW_FAST_SCROLL, isShowFastScroller)
+            bundle.putInt(CountryPicker.EXTRA_SHOW_FAST_SCROLL_BUBBLE_COLOR, fastScrollerBubbleColor)
+            bundle.putInt(CountryPicker.EXTRA_SHOW_FAST_SCROLL_HANDLER_COLOR, fastScrollerHandleColor)
+            bundle.putInt(CountryPicker.EXTRA_LIST_ITEM_TEXT_COLOR, listItemTextColor)
+            bundle.putInt(CountryPicker.EXTRA_FULLSCREEN_TOOLBAR_COLOR, fullScreenToolbarColor)
+            bundle.putInt(
+                CountryPicker.EXTRA_SHOW_FAST_SCROLL_BUBBLE_TEXT_APPEARANCE,
+                fastScrollerBubbleTextAppearance
+            )
+            bundle.putBoolean(CountryPicker.EXTRA_SHOW_COUNTRY_CODE_IN_LIST, isShowCountryCodeInList)
+            intent.putExtras(bundle)
+            if (onStartActivityCallback != null) {
+                onStartActivityCallback!!.onStartActivity(intent, CountryPicker.PICKER_REQUEST_CODE)
+            } else {
+                try {
+                    (context as Activity).startActivityForResult(intent, CountryPicker.PICKER_REQUEST_CODE)
+                } catch (e: ClassCastException) {
+                    e.printStackTrace()
+                    CountryPickerDialog.openPickerDialog(
+                        context, this, isShowCountryCodeInList,
+                        isSearchAllowed, isDialogKeyboardAutoPopup, isShowFastScroller,
+                        fastScrollerBubbleColor, fastScrollerHandleColor, listItemTextColor, fastScrollerBubbleTextAppearance
+                    )
+                }
             }
 
         } else {
             CountryPickerDialog.openPickerDialog(
-                context, this, isShowCountryCodeInList,
-                isSearchAllowed, isDialogKeyboardAutoPopup, isShowFastScroller,
-                fastScrollerBubbleColor, fastScrollerHandleColor, fastScrollerBubbleTextAppearance
+                context,
+                this,
+                isShowCountryCodeInList,
+                isSearchAllowed,
+                isDialogKeyboardAutoPopup,
+                isShowFastScroller,
+                fastScrollerBubbleColor,
+                fastScrollerHandleColor,
+                listItemTextColor,
+                fastScrollerBubbleTextAppearance
             )
         }
     }
@@ -675,6 +711,14 @@ class PhoneNumberEditText : TextInputEditText, CountryPickerDialog.OnCountrySele
         if (countryCode != null) {
             setSelectedCountry(getCountryForName(languageToApply, countryCode))
         }
+    }
+
+    public fun setOnStartActivityCallback(callback: OnStartActivityCallback) {
+        onStartActivityCallback = callback
+    }
+
+    interface OnStartActivityCallback {
+        fun onStartActivity(intent: Intent, requestCode: Int)
     }
 
     //convenient class to save and restore the view state

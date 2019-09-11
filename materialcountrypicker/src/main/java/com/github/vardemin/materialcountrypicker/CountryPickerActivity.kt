@@ -15,7 +15,6 @@ import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.vardemin.fastscroll.FastScroller
-
 /**
  * @author Vladimir Akopzhanian on 10/07/19.
  */
@@ -24,6 +23,8 @@ class CountryPickerActivity: AppCompatActivity() {
     private var showFastScroller = true
     private var fastScrollerBubbleColor = 0
     private var fastScrollerHandleColor = 0
+    private var listItemTextColor = 0
+    private var fullScreenToolbarColor = 0
     private var fastScrollerBubbleTextAppearance = 0
     private var showCountryCode: Boolean = false
     private val TAG = CountryPickerActivity::class.java.simpleName
@@ -50,6 +51,8 @@ class CountryPickerActivity: AppCompatActivity() {
                 showFastScroller = bundle.getBoolean(CountryPicker.EXTRA_SHOW_FAST_SCROLL)
                 fastScrollerBubbleColor = bundle.getInt(CountryPicker.EXTRA_SHOW_FAST_SCROLL_BUBBLE_COLOR)
                 fastScrollerHandleColor = bundle.getInt(CountryPicker.EXTRA_SHOW_FAST_SCROLL_HANDLER_COLOR)
+                listItemTextColor = bundle.getInt(CountryPicker.EXTRA_LIST_ITEM_TEXT_COLOR)
+                fullScreenToolbarColor = bundle.getInt(CountryPicker.EXTRA_FULLSCREEN_TOOLBAR_COLOR)
                 fastScrollerBubbleTextAppearance =
                     bundle.getInt(CountryPicker.EXTRA_SHOW_FAST_SCROLL_BUBBLE_TEXT_APPEARANCE)
                 showCountryCode = bundle.getBoolean(CountryPicker.EXTRA_SHOW_COUNTRY_CODE_IN_LIST)
@@ -72,6 +75,7 @@ class CountryPickerActivity: AppCompatActivity() {
             }
         }
 
+        toolbar.setBackgroundColor(fullScreenToolbarColor)
 
         //recyclerView
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerCountryPicker)
@@ -82,7 +86,7 @@ class CountryPickerActivity: AppCompatActivity() {
         //create picker adapter
         pickerAdapter = CountryPickerAdapter(
             this, callback, countries, countryGroup,
-            searchView, tvNoResult, showCountryCode
+            searchView, tvNoResult, showCountryCode, listItemTextColor
         )
 
         //fast scroller

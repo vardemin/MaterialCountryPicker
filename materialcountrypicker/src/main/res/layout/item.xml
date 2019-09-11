@@ -34,7 +34,7 @@
         android:layout_toStartOf="@+id/tvCode"
         android:gravity="center_vertical"
         android:text="India (IN)"
-        android:textColor="@android:color/secondary_text_light"
+        android:textColor="@color/cp_item_text_color"
         android:textSize="16sp" />
 
     <TextView
@@ -52,7 +52,7 @@
         android:paddingRight="10dp"
         android:paddingStart="10dp"
         android:text="@string/sample_code"
-        android:textColor="@android:color/secondary_text_light"
+        android:textColor="@color/cp_item_text_color"
         android:textSize="16sp" />
 
     <View

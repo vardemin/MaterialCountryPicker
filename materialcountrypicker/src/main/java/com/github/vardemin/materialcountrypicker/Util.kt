@@ -41,7 +41,7 @@ fun mapList(countries: List<Country>): Map<String, List<Country>> {
     for (aChar in chars) {
         val group = ArrayList<Country>()
         for (country in countries) {
-            if (country.name!!.toLowerCase().startsWith(aChar.toString())) {
+            if (country.name!!.toLowerCase().startsWith(aChar.toString().toLowerCase())) {
                 group.add(country)
             }
         }

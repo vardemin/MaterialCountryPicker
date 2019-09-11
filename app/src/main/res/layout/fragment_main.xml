@@ -41,6 +41,7 @@
                     app:cp_fastScrollerBubbleTextAppearance="@style/TextAppearance.AppCompat.Medium.Inverse"
                     app:cp_fastScrollerHandleColor="@color/colorAccent"
                     app:cp_rememberLastSelection="true"
+                    app:cp_showFullScreeDialog="true"
                     app:cp_showCountryCodeInView="false"
                     android:text='@={PhoneEditConverter.toString(editPhone, mainViewModel.paramsMap["phone"])}'/>
 

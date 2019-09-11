@@ -21,7 +21,8 @@ class CountryPickerAdapter(val context: Context,
                            val countryGroup: Map<String, List<Country>>,
                            private var searchView: SearchView? = null,
                            private val tvNoResult: TextView,
-                           val showCountryCode: Boolean
+                           val showCountryCode: Boolean,
+                           val listItemTextColor: Int
 ): SectionedRecyclerViewAdapter<CountryPickerAdapter.CountryCodeViewHolder>(), Filterable, SectionTitleProvider {
     private var filteredCountryGroup: Map<String, List<Country>> = countryGroup
 
@@ -36,6 +37,10 @@ class CountryPickerAdapter(val context: Context,
             else -> R.layout.item
         }
         val view = LayoutInflater.from(parent.context).inflate(layoutRes, parent, false)
+        if (viewType == VIEW_TYPE_ITEM){
+            view.findViewById<TextView>(R.id.tvName).setTextColor(listItemTextColor)
+            view.findViewById<TextView>(R.id.tvCode).setTextColor(listItemTextColor)
+        }
         return CountryCodeViewHolder(view)
     }
 

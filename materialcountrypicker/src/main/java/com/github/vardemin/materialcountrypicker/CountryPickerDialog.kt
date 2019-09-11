@@ -27,6 +27,7 @@ object CountryPickerDialog {
         isShowFastScroller: Boolean,
         fastScrollerBubbleColor: Int,
         fastScrollerHandleColor: Int,
+        listItemTextColor: Int,
         fastScrollerBubbleTextAppearance: Int
     ) {
         val dialog = getDialog(context)
@@ -69,7 +70,7 @@ object CountryPickerDialog {
 
         val cca = CountryPickerAdapter(
             context, listener, countries, countryGroup,
-            searchView, tvNoResult, showCountryCodeInList
+            searchView, tvNoResult, showCountryCodeInList, listItemTextColor
         )
         recyclerView.setLayoutManager(LinearLayoutManager(context))
         recyclerView.adapter = cca

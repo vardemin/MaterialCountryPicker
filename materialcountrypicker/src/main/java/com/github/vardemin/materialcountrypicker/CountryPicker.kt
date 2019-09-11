@@ -18,6 +18,8 @@ object CountryPicker {
     val EXTRA_SHOW_FAST_SCROLL = "com.github.vardemin.materialcountrypicker_EXTRA_SHOW_FAST_SCROLL"
     val EXTRA_SHOW_FAST_SCROLL_BUBBLE_COLOR = "com.github.vardemin.materialcountrypicker_EXTRA_SHOW_FAST_BUBBLE_COLOR"
     val EXTRA_SHOW_FAST_SCROLL_HANDLER_COLOR = "com.github.vardemin.materialcountrypicker_EXTRA_SHOW_FAST_HANDLE_COLOR"
+    val EXTRA_LIST_ITEM_TEXT_COLOR = "com.github.jaylumba.phonecountrypicker_EXTRA_LIST_ITEM_TEXT_COLOR"
+    val EXTRA_FULLSCREEN_TOOLBAR_COLOR = "com.github.jaylumba.phonecountrypicker_EXTRA_FULLSCREEN_TOOLBAR_COLOR"
     val EXTRA_SHOW_FAST_SCROLL_BUBBLE_TEXT_APPEARANCE =
         "com.github.vardemin.materialcountrypicker_EXTRA_SHOW_FAST_BUBBLE_TEXT_APPEARANCE"
     val EXTRA_SHOW_COUNTRY_CODE_IN_LIST = "com.github.vardemin.materialcountrypicker_EXTRA_SHOW_COUNTRY_CODE_IN_LIST"
@@ -48,6 +50,7 @@ object CountryPicker {
         showFastScroller: Boolean,
         @ColorRes fastScrollerBubbleColor: Int,
         @ColorRes fastScrollerHandleColor: Int,
+        @ColorRes listItemTextColor: Int,
         @StyleRes fastScrollerBubbleTextAppearance: Int,
         showCountryCodeInList: Boolean, isShowCountryCodeInList: Boolean,
         isDialogKeyboardAutoPopup: Boolean, isSearchAllowed: Boolean
@@ -55,7 +58,7 @@ object CountryPicker {
         CountryPickerDialog.openPickerDialog(
             context, callback, isShowCountryCodeInList,
             isSearchAllowed, isDialogKeyboardAutoPopup, showFastScroller,
-            fastScrollerBubbleColor, fastScrollerHandleColor, fastScrollerBubbleTextAppearance
+            fastScrollerBubbleColor, fastScrollerHandleColor,listItemTextColor, fastScrollerBubbleTextAppearance
         )
 
     }
