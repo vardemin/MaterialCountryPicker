@@ -3,11 +3,7 @@ package com.github.vardemin.materialcountrypicker
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
-import android.content.res.Configuration
-import android.content.res.TypedArray
 import android.graphics.Bitmap
-import android.graphics.Rect
 import android.graphics.drawable.BitmapDrawable
 import android.os.Build
 import android.os.Bundle
@@ -15,10 +11,7 @@ import android.os.Parcel
 import android.os.Parcelable
 import android.telephony.PhoneNumberUtils
 import android.telephony.TelephonyManager
-import android.text.Editable
-import android.text.InputType
-import android.text.SpannableStringBuilder
-import android.text.TextUtils
+import android.text.*
 import android.text.method.DigitsKeyListener
 import android.util.AttributeSet
 import android.util.Log
@@ -63,7 +56,7 @@ class PhoneNumberEditText : TextInputEditText, CountryPickerDialog.OnCountrySele
     private var showCountryDropdownArrow: Boolean = false
     private var rememberLastSelection: Boolean = false
     private var setCountryCodeBorder: Boolean = false
-    private var allowedSymbols: String = "0123456789"
+    private var allowedSymbols: String = ""
     var isShowCountryCodeInList: Boolean = false
 
 
@@ -288,8 +281,9 @@ class PhoneNumberEditText : TextInputEditText, CountryPickerDialog.OnCountrySele
         }
 
         isRTL = isRTLLanguage
-        inputType = InputType.TYPE_CLASS_NUMBER
-        keyListener = DigitsKeyListener.getInstance(allowedSymbols)
+        inputType = InputType.TYPE_CLASS_PHONE
+        filters = arrayOf(inputPhoneFilter)
+            //keyListener = DigitsKeyListener.getInstance(allowedSymbols)
 
         //load the default country if it was set by the user
         if (!TextUtils.isEmpty(defaultCountryName)) {
@@ -587,6 +581,39 @@ class PhoneNumberEditText : TextInputEditText, CountryPickerDialog.OnCountrySele
                 return country
         }
         return defaultCountry
+    }
+
+    public val inputPhoneFilter = object: InputFilter {
+        override
+        fun filter(
+            source: CharSequence?,
+            start: Int,
+            end: Int,
+            dest: Spanned?,
+            dstart: Int,
+            dend: Int
+        ): CharSequence? {
+
+            if (source is SpannableStringBuilder) {
+                var sourceAsSpannableBuilder = source as SpannableStringBuilder
+                for (i: Int in end - 1 downTo  start) {
+                    var currentChar = source[i]
+                    if (!Character.isDigit(currentChar) && !allowedSymbols.contains(currentChar, true)) {
+                        sourceAsSpannableBuilder.delete(i, i+1)
+                    }
+                }
+                return source
+            } else {
+                var filteredStringBuilder = StringBuilder()
+                for (i in start until  end) {
+                    var currentChar = source?.get(i) ?: ' '
+                    if (Character.isDigit(currentChar) || allowedSymbols.contains(currentChar, true)) {
+                        filteredStringBuilder.append(currentChar)
+                    }
+                }
+                return filteredStringBuilder.toString()
+            }
+        }
     }
 
     private fun getCountryForDialCode(dialCode: String?): Country {

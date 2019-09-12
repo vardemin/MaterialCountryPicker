@@ -30,7 +30,7 @@ Then add the following line
 
 ``` gradle
 dependencies {
-  implementation 'com.github.vardemin.MaterialCountryPicker:materialcountrypicker:0.2.2'
+  implementation 'com.github.vardemin.MaterialCountryPicker:materialcountrypicker:0.2.3'
 }
 ```
 
@@ -121,7 +121,7 @@ List of xml attribues that are available in PhoneNumberEdittext
 |cp_showFastScroll|Determines whether the Fastscroller button is show or not.|true
 |cp_dialogKeyboardAutoPopup|Use this to toggle Kwyboard auto popup for  CountryPicker in dialog mode. |true
 |cp_showFullScreeDialog|Use this to switch between Dialog and full screen Pickers| false
-|cp_allowedSymbols|Additional allowed symbols| "-"
+|cp_allowedSymbols|Additional allowed symbols (used in phoneInputFilter filter, u can override it in "filters")| "-"
 |cp_showCountryCodeInView|Dtermins whether the country code is shown in the EditText|true
 |cp_showCountryCodeInList|Determins whether the Country Code is shown in the picker list.|true
 |cp_showCountryDialCodeInView|Determind if the Country Dial code is shown in the view.|true
